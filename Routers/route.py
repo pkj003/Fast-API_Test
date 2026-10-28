@@ -42,3 +42,32 @@ def delete(conn: Db_connection,task_id : int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="student not found")
     return deleted
     
+
+
+@router.get("/task/")
+def get_tasks(
+    conn: Db_connection,
+    Priority: str | None = None
+):
+    if Priority:
+        rows = conn.execute(
+            "SELECT * FROM tasks WHERE Priority = ?",
+            (Priority,)
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT * FROM tasks"
+        ).fetchall()
+
+    return [dict(row) for row in rows]
+
+
+@router.get("/task/status")
+def gettaskstatus(conn: Db_connection,Taskstatus:str|None=None):
+    if Taskstatus:
+        rows = conn.execute("SELECT * FROM tasks WHERE Taskstatus = ?",(Taskstatus,)).fetchall()
+    else:
+        return{
+            "message":"No status that matches the input"
+        }
+    return [dict(row) for row in rows]
