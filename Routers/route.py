@@ -64,9 +64,9 @@ def get_tasks(
 
 @router.get("/task/status")
 def gettaskstatus(conn: Db_connection,Taskstatus:str|None=None):
-    if Taskstatus:
+    if Taskstatus is not None:
         rows = conn.execute("SELECT * FROM tasks WHERE Taskstatus = ?",(Taskstatus,)).fetchall()
-    else:
+    if not rows:
         return{
             "message":"No status that matches the input"
         }
